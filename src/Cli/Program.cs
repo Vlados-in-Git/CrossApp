@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Core.Domain;
 using Core.Dto;
 using Core.Import;
 
@@ -36,4 +37,37 @@ foreach (var err in result.Errors)
     Console.WriteLine(err);
 }
 
+Console.WriteLine();
+Console.WriteLine("--- Laboratory Work 4 ---");
+Console.WriteLine("Scenario 1 (Success):");
+var product = Product.Create("P-100", "SKU-999", "Test Product", "pcs", 100);
+Console.WriteLine($"  Created product: {product.Sku} - {product.Name}, stock: {product.Quantity}");
+product.RegisterArrival(50);
+Console.WriteLine($"  After arrival of 50: {product.Quantity}");
+product.Issue(30);
+Console.WriteLine($"  After issuing 30: {product.Quantity}");
+Console.WriteLine($"  Final state: {product.Quantity}");
+
+Console.WriteLine();
+Console.WriteLine("Scenario 2 (Invariant Violations):");
+TryDo("Creation with empty ID", () => Product.Create(" ", "SKU-999", "Test", "pcs", 10));
+TryDo("Creation with negative stock", () => Product.Create("P-101", "SKU-1000", "Test", "pcs", -5));
+TryDo("Issuing more than available stock", () => product.Issue(500));
+
+Console.WriteLine();
+Console.WriteLine($"Integrity check: final stock remains {product.Quantity}");
+
 return 0;
+
+static void TryDo(string title, Action action)
+{
+    try
+    {
+        action();
+        Console.WriteLine($"  {title}: Exception did NOT trigger — invariant is missing!");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"  {title}: {ex.GetType().Name} — {ex.Message}");
+    }
+}

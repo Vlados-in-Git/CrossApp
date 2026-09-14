@@ -59,3 +59,11 @@ The `ParseLine` method leverages C# `switch` expression pattern matching:
 2. **List Pattern & Constants**: `[_, "", _, _, _]` catches empty mandatory fields.
 3. **Guard Clause (`when`)**: `when !int.TryParse(...) || q < 0` safely handles numerical validation without exceptions.
 4. **List Pattern with Variable Binding**: `[var id, ...]` extracts all values elegantly when perfectly formed.
+
+## Domain Model and Invariants (Laboratory Work 4)
+
+| Rule (Invariant) | Exception Type | Verification Method |
+| :--- | :--- | :--- |
+| SKU / ISBN cannot be empty | ArgumentException | Product.Create |
+| Initial stock >= 0 | ArgumentOutOfRangeException | Product.Create |
+| Issuing more than available stock is not allowed | InvalidOperationException | Product.Issue |
