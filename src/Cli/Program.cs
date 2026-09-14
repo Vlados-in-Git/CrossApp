@@ -1,26 +1,12 @@
-using System;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using Core;
 
 Console.OutputEncoding = Encoding.UTF8;
 
 bool isJson = args.Length > 0 && args.Contains("--json", StringComparer.OrdinalIgnoreCase);
 
-var sysInfo = new
-{
-    App = "CrossApp - Cross-platform programming practicum",
-    Student = "Vlad, Group 33",
-    OSDescription = RuntimeInformation.OSDescription,
-    OSVersion = Environment.OSVersion.ToString(),
-    ProcessArchitecture = RuntimeInformation.ProcessArchitecture.ToString(),
-    DotNetVersion = Environment.Version.ToString(),
-    RuntimeFramework = RuntimeInformation.FrameworkDescription,
-    BaseDirectory = AppContext.BaseDirectory,
-    CurrentDirectory = Environment.CurrentDirectory,
-    Domain = "Warehouse (products, batches, stock, movements)"
-};
+var sysInfo = EnvironmentService.GetEnvironmentInfo();
 
 if (isJson)
 {
