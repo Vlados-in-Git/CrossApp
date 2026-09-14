@@ -39,3 +39,23 @@ dotnet run --project src/Cli -- --json
 ### Conclusions
 - **FDD** generates a compact artifact but requires the presence of a corresponding .NET SDK/Runtime on the target machine.
 - **SCD** creates a fully autonomous package for a specific OS/architecture, but significantly increases the file volume due to packaging CLR and BCL.
+
+## Laboratory Work 3: Importer & CSV
+
+### Input Data Format
+- **Format**: CSV
+- **Delimiter**: `;`
+- **Encoding**: UTF-8
+- **Header**: Required (`id;sku;name;unit;quantity`)
+
+### DTO Design Decisions
+`record` was chosen instead of `class` for the DTO (`ProductDto`) because:
+- **Immutability**: Data transfer objects should not change state after creation.
+- **Value Equality**: Records provide built-in value-based equality.
+
+### Pattern Matching in CSV Parsing
+The `ParseLine` method leverages C# `switch` expression pattern matching:
+1. **Property Pattern**: `{ Length: < 5 }` ensures the row has enough columns.
+2. **List Pattern & Constants**: `[_, "", _, _, _]` catches empty mandatory fields.
+3. **Guard Clause (`when`)**: `when !int.TryParse(...) || q < 0` safely handles numerical validation without exceptions.
+4. **List Pattern with Variable Binding**: `[var id, ...]` extracts all values elegantly when perfectly formed.

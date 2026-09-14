@@ -1,30 +1,39 @@
+using System;
+using System.IO;
+using System.Linq;
 using System.Text;
-using System.Text.Json;
-using Core;
+using Core.Dto;
+using Core.Import;
 
 Console.OutputEncoding = Encoding.UTF8;
 
-bool isJson = args.Length > 0 && args.Contains("--json", StringComparer.OrdinalIgnoreCase);
+string path = args.Length > 0 ? args[0] : Path.Combine("data", "sample.csv");
 
-var sysInfo = EnvironmentService.GetEnvironmentInfo();
+if (!File.Exists(path))
+{
+    Console.WriteLine($"File not found: {Path.GetFullPath(path)}");
+    return 1;
+}
 
-if (isJson)
+ImportResult<ProductDto> result;
+string extension = Path.GetExtension(path).ToLowerInvariant();
+
+result = extension switch
 {
-    string jsonString = JsonSerializer.Serialize(sysInfo, new JsonSerializerOptions { WriteIndented = true });
-    Console.WriteLine(jsonString);
-}
-else
+    ".json" => ProductJsonImporter.Load(path),
+    _ => ProductCsvImporter.Load(path)
+};
+
+Console.WriteLine($"Loaded {result.Items.Count} items.");
+foreach (var p in result.Items.Take(5))
 {
-    Console.WriteLine(sysInfo.App);
-    Console.WriteLine($"Student: {sysInfo.Student}");
-    Console.WriteLine(new string('-', 52));
-    Console.WriteLine($"OS (OSDescription)   : {sysInfo.OSDescription}");
-    Console.WriteLine($"OS (Environment)     : {sysInfo.OSVersion}");
-    Console.WriteLine($"Process Architecture : {sysInfo.ProcessArchitecture}");
-    Console.WriteLine($".NET Version (CLR)   : {sysInfo.DotNetVersion}");
-    Console.WriteLine($"Runtime              : {sysInfo.RuntimeFramework}");
-    Console.WriteLine($"App Directory        : {sysInfo.BaseDirectory}");
-    Console.WriteLine($"Current Directory    : {sysInfo.CurrentDirectory}");
-    Console.WriteLine(new string('-', 52));
-    Console.WriteLine($"Domain               : {sysInfo.Domain}");
+    Console.WriteLine($" {p.Id,-6} {p.Sku,-10} {p.Name,-26} {p.Quantity,5} {p.Unit}");
 }
+
+Console.WriteLine($"Errors: {result.Errors.Count}");
+foreach (var err in result.Errors)
+{
+    Console.WriteLine(err);
+}
+
+return 0;
