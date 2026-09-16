@@ -20,6 +20,11 @@ Run in JSON output mode:
 dotnet run --project src/Cli -- --json
 ```
 
+publish
+```
+dotnet publish .\src\Cli\ -c Release -r win-x64 --self-contained true
+```
+
 ## Environment
 - **.NET SDK**: 10.0.11 (Runtime) / 10.0.400 (SDK)
 - **OS**: Windows 10 x64 (Microsoft Windows 10.0.26200)
