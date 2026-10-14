@@ -18,13 +18,13 @@ public sealed class Product
         if (string.IsNullOrWhiteSpace(id))
             throw new System.ArgumentException("Product Id cannot be empty or whitespace.", nameof(id));
         if (string.IsNullOrWhiteSpace(sku))
-            throw new System.ArgumentException("Product SKU cannot be empty or whitespace.", nameof(sku));
+            throw new System.ArgumentException("SKU cannot be empty or whitespace.", nameof(sku));
         if (string.IsNullOrWhiteSpace(name))
             throw new System.ArgumentException("Product Name cannot be empty or whitespace.", nameof(name));
         if (string.IsNullOrWhiteSpace(unit))
             throw new System.ArgumentException("Product Unit cannot be empty or whitespace.", nameof(unit));
         if (quantity < 0)
-            throw new System.ArgumentOutOfRangeException(nameof(quantity), quantity, $"Initial quantity cannot be negative. Provided: {quantity}");
+            throw new System.ArgumentOutOfRangeException(nameof(quantity), quantity, "Initial quantity cannot be negative.");
 
         return new Product(id, sku, name, unit, quantity, note);
     }
@@ -32,7 +32,7 @@ public sealed class Product
     public void RegisterArrival(int amount)
     {
         if (amount <= 0)
-            throw new System.ArgumentOutOfRangeException(nameof(amount), amount, $"Arrival amount must be greater than zero. Provided: {amount}");
+            throw new System.ArgumentOutOfRangeException(nameof(amount), amount, "Arrival amount must be greater than zero.");
 
         _quantity += amount;
     }
@@ -40,10 +40,10 @@ public sealed class Product
     public void Issue(int amount)
     {
         if (amount <= 0)
-            throw new System.ArgumentOutOfRangeException(nameof(amount), amount, $"Issue amount must be greater than zero. Provided: {amount}");
+            throw new System.ArgumentOutOfRangeException(nameof(amount), amount, "Issue amount must be greater than zero.");
             
         if (_quantity < amount)
-            throw new System.InvalidOperationException($"Cannot issue {amount} units. Current stock for {Sku} is {_quantity}.");
+            throw new System.InvalidOperationException($"Cannot issue {amount}: stock for {Sku} = {_quantity}");
 
         _quantity -= amount;
     }

@@ -38,24 +38,19 @@ foreach (var err in result.Errors)
 }
 
 Console.WriteLine();
-Console.WriteLine("--- Laboratory Work 4 ---");
-Console.WriteLine("Scenario 1 (Success):");
-var product = Product.Create("P-100", "SKU-999", "Test Product", "pcs", 100);
-Console.WriteLine($"  Created product: {product.Sku} - {product.Name}, stock: {product.Quantity}");
-product.RegisterArrival(50);
-Console.WriteLine($"  After arrival of 50: {product.Quantity}");
-product.Issue(30);
-Console.WriteLine($"  After issuing 30: {product.Quantity}");
-Console.WriteLine($"  Final state: {product.Quantity}");
+Console.WriteLine("=== Scenario 1: Success ===");
+var product = Product.Create("P-001", "SKU-001", "Cement M400 25kg", "pcs", 100);
+Console.WriteLine($"{product.Id} [{product.Sku}] {product.Name} — {product.Quantity} {product.Unit}");
+product.RegisterArrival(20);
+Console.WriteLine($"{product.Id} [{product.Sku}] {product.Name} — {product.Quantity} {product.Unit}");
 
-Console.WriteLine();
-Console.WriteLine("Scenario 2 (Invariant Violations):");
-TryDo("Creation with empty ID", () => Product.Create(" ", "SKU-999", "Test", "pcs", 10));
-TryDo("Creation with negative stock", () => Product.Create("P-101", "SKU-1000", "Test", "pcs", -5));
-TryDo("Issuing more than available stock", () => product.Issue(500));
+Console.WriteLine("=== Scenario 2: Invariant Violations ===");
+TryDo("issue greater than stock", () => product.Issue(1000));
+TryDo("empty SKU", () => Product.Create("P-002", "", "Cement M400 25kg", "pcs", 10));
+TryDo("negative stock", () => Product.Create("P-003", "SKU-003", "Cement M400 25kg", "pcs", -5));
 
-Console.WriteLine();
-Console.WriteLine($"Integrity check: final stock remains {product.Quantity}");
+Console.WriteLine("Observed fact: In Scenario 1, state changes only via methods; in Scenario 2,");
+Console.WriteLine($"no attempt modified the object — after all rejections, stock remains {product.Quantity}.");
 
 return 0;
 
@@ -64,10 +59,11 @@ static void TryDo(string title, Action action)
     try
     {
         action();
-        Console.WriteLine($"  {title}: Exception did NOT trigger — invariant is missing!");
+        Console.WriteLine($"{title}: Exception was NOT thrown — invariant missing!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"  {title}: {ex.GetType().Name} — {ex.Message}");
+        Console.WriteLine($"{title}: {ex.GetType().Name} — {ex.Message}");
     }
 }
+

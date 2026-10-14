@@ -62,8 +62,10 @@ The `ParseLine` method leverages C# `switch` expression pattern matching:
 
 ## Domain Model and Invariants (Laboratory Work 4)
 
-| Rule (Invariant) | Exception Type | Verification Method |
-| :--- | :--- | :--- |
-| SKU / ISBN cannot be empty | ArgumentException | Product.Create |
-| Initial stock >= 0 | ArgumentOutOfRangeException | Product.Create |
-| Issuing more than available stock is not allowed | InvalidOperationException | Product.Issue |
+| Rule (Invariant) | Exception Type | Verification Method | Error Message |
+| :--- | :--- | :--- | :--- |
+| SKU cannot be empty or whitespace | `ArgumentException` | `Product.Create` | "SKU cannot be empty or whitespace." |
+| Initial stock $\ge 0$ | `ArgumentOutOfRangeException` | `Product.Create` | "Initial quantity cannot be negative." |
+| Issuing more than available stock is not allowed | `InvalidOperationException` | `Product.Issue` | "Cannot issue {amount}: stock for {Sku} = {_quantity}" |
+| Operation amount (arrival / issue) > 0 | `ArgumentOutOfRangeException` | `Product.RegisterArrival`, `Product.Issue` | "... amount must be greater than zero." |
+| Id, Name, Unit cannot be empty or whitespace | `ArgumentException` | `Product.Create` | "Product ... cannot be empty or whitespace." |
