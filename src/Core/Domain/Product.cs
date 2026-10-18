@@ -52,6 +52,8 @@ public sealed class Product
 
     public static Product FromDto(ProductDto dto) => Create(dto.Id, dto.Sku, dto.Name, dto.Unit, dto.Quantity, dto.Note);
 
+    public override string ToString() => $"{Id} [{Sku}] {Name} — {Quantity} {Unit}";
+
     private Product(string id, string sku, string name, string unit, int quantity, string? note)
     {
         Id = id;

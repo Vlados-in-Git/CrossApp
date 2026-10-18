@@ -45,16 +45,17 @@ product.RegisterArrival(20);
 Console.WriteLine($"{product.Id} [{product.Sku}] {product.Name} — {product.Quantity} {product.Unit}");
 
 Console.WriteLine("=== Scenario 2: Invariant Violations ===");
-TryDo("issue greater than stock", () => product.Issue(1000));
-TryDo("empty SKU", () => Product.Create("P-002", "", "Cement M400 25kg", "pcs", 10));
-TryDo("negative stock", () => Product.Create("P-003", "SKU-003", "Cement M400 25kg", "pcs", -5));
+TryDo("issue greater than stock", () => product.Issue(1000), product);
+TryDo("issue negative amount", () => product.Issue(-50), product);
+TryDo("empty SKU", () => Product.Create("P-002", "", "Cement M400 25kg", "pcs", 10), product);
+TryDo("negative stock", () => Product.Create("P-003", "SKU-003", "Cement M400 25kg", "pcs", -5), product);
 
 Console.WriteLine("Observed fact: In Scenario 1, state changes only via methods; in Scenario 2,");
-Console.WriteLine($"no attempt modified the object — after all rejections, stock remains {product.Quantity}.");
+Console.WriteLine($"no attempt modified the object — after all rejections, stock remains {product.Quantity} ({product}).");
 
 return 0;
 
-static void TryDo(string title, Action action)
+static void TryDo(string title, Action action, Product? targetEntity = null)
 {
     try
     {
@@ -63,7 +64,11 @@ static void TryDo(string title, Action action)
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"{title}: {ex.GetType().Name} — {ex.Message}");
+        Console.WriteLine($"{title}: {ex.GetType().Name} — {ex.Message.TrimEnd()}");
+        if (targetEntity != null)
+        {
+            Console.WriteLine($"  Entity state (unchanged): {targetEntity}");
+        }
     }
 }
 
