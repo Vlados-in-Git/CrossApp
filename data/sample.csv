@@ -1,0 +1,14 @@
+id;sku;name;unit;quantity
+WH-1;SKU001;Metal Pipe;pcs;100
+WH-2;SKU002;Copper Wire;meters;500
+WH-3;SKU003;Steel Bolt M8;pcs;1000
+WH-4;SKU004;Steel Nut M8;pcs;1000
+WH-5;SKU005;Iron Sheet;pcs;50
+WH-6;SKU006;PVC Pipe;pcs;200
+WH-7;SKU007;Nylon Rope;meters;150
+WH-8;SKU008;Wooden Pallet;pcs;20
+WH-9;SKU009;Plastic Crate;pcs;40
+WH-10;SKU010;Duct Tape;pcs;300
+WH-11;SKU011;Short Row;pcs
+WH-12;;Empty SKU;pcs;10
+WH-13;SKU013;Bad Quantity;pcs;-5
